@@ -503,7 +503,8 @@ void data_received(uint8_t* data, uint32_t *Len)
 
 	if(data_check(data) == 0)
 	{
-	  PROCESS_INIT(data);
+	  //PROCESS_INIT(data);
+		CDC_Transmit_FS(buffer, sizeof(buffer)-1);
 	}
 
 	else

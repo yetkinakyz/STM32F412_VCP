@@ -40,12 +40,9 @@ while True:
     # Add checksum to data
     dataSending += chr(checksum)
 
-    #print(str(checksum))
-    #print(str(dataSending))
-
     #Send message to device
     serialPort.write(dataSending.encode('Ascii'))
 
     # Receive data from device
     dataReceived = serialPort.readline(len(dataSending))
-    print("\n[STM32]: " + "|" + dataReceived.hex('|', -1) + "|")
+    print("\n[STM32]: " + dataReceived.decode('Ascii'))
