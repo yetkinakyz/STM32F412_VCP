@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['serUI.py']
+APP = ['BarkoSerial.py']
 DATA_FILES = ['logo.png']
 OPTIONS = {}
 
