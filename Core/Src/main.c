@@ -62,8 +62,6 @@ unsigned char peripheralGROUP = 0xFF;
 unsigned char peripheralID = 0xFF;
 unsigned char PROCESS = 0xFF;
 unsigned char COMMAND = 0xFF;
-
-extern UART_HandleTypeDef* selected_usart;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,12 +75,13 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN PFP */
-extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+void USART_Receive_IT(unsigned char peripheralID);
 void data_received(uint8_t* data, uint32_t *Len);
 uint8_t data_check(uint8_t data[]);
-
 void PROCESS_INIT(uint8_t data[]);
 
+// External private functions
+extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -127,15 +126,13 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  //Get LED State
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_UART_Receive_IT(&huart1, usart_buffer, sizeof(usart_buffer));
+	  USART_Receive_IT(peripheralID);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -462,31 +459,36 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+/* USART receive function */
+void USART_Receive_IT(unsigned char peripheralID)
+{
+	if(peripheralID == 0x01)
+	{
+		HAL_UART_Receive_IT(&huart1, usart_buffer, sizeof(usart_buffer));
+	}
+
+	else if(peripheralID == 0x02)
+	{
+		HAL_UART_Receive_IT(&huart2, usart_buffer, sizeof(usart_buffer));
+	}
+
+	else if(peripheralID == 0x03)
+	{
+		HAL_UART_Receive_IT(&huart3, usart_buffer, sizeof(usart_buffer));
+	}
+
+	else if(peripheralID == 0x06)
+	{
+		HAL_UART_Receive_IT(&huart6, usart_buffer, sizeof(usart_buffer));
+	}
+}
+
 /* USART receive callback */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(peripheralGROUP == 0x20)
 	{
-		if(peripheralID == 0x01)
-		{
-			HAL_UART_Receive_IT(&huart1, usart_buffer, sizeof(usart_buffer));
-		}
-
-		else if(peripheralID == 0x02)
-		{
-			HAL_UART_Receive_IT(&huart2, usart_buffer, sizeof(usart_buffer));
-		}
-
-		else if(peripheralID == 0x03)
-		{
-			HAL_UART_Receive_IT(&huart3, usart_buffer, sizeof(usart_buffer));
-		}
-
-		else if(peripheralID == 0x06)
-		{
-			HAL_UART_Receive_IT(&huart6, usart_buffer, sizeof(usart_buffer));
-		}
-
+		USART_Receive_IT(peripheralID);
 		CDC_Transmit_FS(usart_buffer, sizeof(usart_buffer));
 	}
 }
@@ -537,13 +539,13 @@ void PROCESS_INIT(uint8_t data[])
 	if(peripheralGROUP >= 0x10 && peripheralGROUP < 0x20)
 	{
 		//GPIO Control
-		GPIO_FUNC(peripheralGROUP, peripheralID, PROCESS, COMMAND);
+		GPIO_Main(peripheralGROUP, peripheralID, PROCESS, COMMAND);
 	}
 
 	else if(peripheralGROUP >= 0x20 && peripheralGROUP < 0x30)
 	{
 		//USART Control
-		USART_FUNC(peripheralID, PROCESS, COMMAND);
+		USART_Main(peripheralID, PROCESS, COMMAND);
 	}
 
 	else if(peripheralGROUP >= 0x30 && peripheralGROUP < 0x40)

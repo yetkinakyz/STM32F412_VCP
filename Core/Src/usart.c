@@ -8,41 +8,49 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 
-/* Private function prototypes -----------------------------------------------*/
+/* External private functions -----------------------------------------------*/
 extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 extern void data_received(uint8_t* data, uint32_t *Len);
-void USART_SELECT(unsigned char peripheralID);
 
-/* Private variables -----------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+void USART_Transmit(unsigned char peripheralID);
+
+/* External private variables -----------------------------------------------*/
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 
+/* Private variables -----------------------------------------------*/
 extern unsigned char peripheralID;
 
-UART_HandleTypeDef* selected_usart;
-
-void USART_FUNC(unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND)
+/* Main USART function */
+void USART_Main(unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND)
 {
-	if(peripheralID == 0x01)
+	USART_Transmit(peripheralID);
+}
+
+/* USART Transmit function */
+void USART_Transmit(unsigned char peripheralID)
+{
+	if(peripheralID == 0x01) //uart1
 	{
 		HAL_UART_Transmit(&huart1, (uint8_t *)"0", strlen("0"), HAL_MAX_DELAY);
 	}
 
-	else if(peripheralID == 0x02)
+	else if(peripheralID == 0x02) //uart2
 	{
-		HAL_UART_Transmit(&huart2, (uint8_t *)&COMMAND, sizeof(COMMAND), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart2, (uint8_t *)"0", strlen("0"), HAL_MAX_DELAY);
 	}
 
-	else if(peripheralID == 0x03)
+	else if(peripheralID == 0x03) //uart3
 	{
-		HAL_UART_Transmit(&huart3, (uint8_t *)&COMMAND, sizeof(COMMAND), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart3, (uint8_t *)"0", strlen("0"), HAL_MAX_DELAY);
 	}
 
-	else if(peripheralID == 0x06)
+	else if(peripheralID == 0x06) //uart6
 	{
-		HAL_UART_Transmit(&huart6, (uint8_t *)&COMMAND, sizeof(COMMAND), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart6, (uint8_t *)"0", strlen("0"), HAL_MAX_DELAY);
 	}
 
 	else

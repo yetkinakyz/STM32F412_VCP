@@ -11,6 +11,6 @@
 #include "stm32f4xx_hal.h"
 #include "usb_device.h"
 
-void USART_FUNC(unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND);
+void USART_Main(unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND);
 
 #endif /* INC_USART_H_ */

@@ -11,6 +11,6 @@
 #include "stm32f4xx_hal.h"
 #include "usb_device.h"
 
-void GPIO_FUNC(unsigned char peripheralGROUP, unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND);
+void GPIO_Main(unsigned char peripheralGROUP, unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND);
 
 #endif /* INC_GPIO_H_ */

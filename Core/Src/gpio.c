@@ -16,7 +16,7 @@ GPIO_TypeDef* GPIO_PORT_SELECT(unsigned char peripheralGROUP);
 uint16_t GPIO_PIN_SELECT(unsigned char peripheralID);
 
 /* Functions -----------------------------------------------------------------*/
-void GPIO_FUNC(unsigned char peripheralGROUP, unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND)
+void GPIO_Main(unsigned char peripheralGROUP, unsigned char peripheralID, unsigned char PROCESS, unsigned char COMMAND)
 {
 	//Read GPIO
 	if(PROCESS == 0x11)
