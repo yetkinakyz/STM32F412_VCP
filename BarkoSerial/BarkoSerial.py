@@ -56,7 +56,7 @@ btn_refresh = Button(window, text="Refresh", command = refresh_ports, width = 10
 btn_refresh.grid(column=0, row=2, sticky = W, padx = 375, pady = 2)
 
 #### Terminal box
-consoleText = scrolledtext.ScrolledText(window, width = 60, height = 20, state='disabled', background = 'black', foreground = "white", font=("Courier", 14))
+consoleText = scrolledtext.ScrolledText(window, width = 68, height = 21, state='disabled', background = 'black', foreground = "white", font=("Courier", 12))
 consoleText.grid(column=0, row=5, sticky = W, padx = 15, pady = 10)
 
 # Print text to terminal box
@@ -73,14 +73,17 @@ def receive():
             # Print received data on terminal box
             try:
                 dataReceived = serialPort.readline() #Get data from device
+                print(dataReceived)
                 # If data exists
                 if dataReceived != b'':
-                    txt_print("[" + comboPort.get() + "]: " + dataReceived.decode('utf-8'))
+                    txt_print("[" + comboPort.get() + "]:" + dataReceived.decode('utf-8'))
+                    
             except:
                 serialPort.close()
                 txt_print("[ i ]: Disconnected.\n")
                 buttonConnect.configure(text = "Connect", command = connect)
                 break
+                
 
 #### Connect and disconnect button
 def connect():
@@ -271,7 +274,7 @@ def sendText():
     if serialPort.is_open:
         # Print on terminal box
         if dataSendingText != b'':
-            txt_print("[" + os.environ.get('USER') + "]: " + dataSendingText + "\n")
+            txt_print("[" + os.environ.get('USER') + "]:" + dataSendingText + "\n")
 
         textTextbox.delete(0, END) # Clear sending textbox
 
@@ -297,7 +300,7 @@ def sendBytes():
             # Print on terminal box
             dataSendingBytes += chr(int(dataBytes[byte], 16))
 
-        txt_print("[" + os.environ.get('USER') + "]: ")
+        txt_print("[" + os.environ.get('USER') + "]:")
         for i in range(len(dataBytes)):
             txt_print("|" + hex(ord(dataSendingBytes[i]))[2:])
         txt_print("|\n")

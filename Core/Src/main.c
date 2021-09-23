@@ -48,20 +48,26 @@ I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 I2C_HandleTypeDef hi2c3;
 
+SPI_HandleTypeDef hspi1;
+SPI_HandleTypeDef hspi2;
+SPI_HandleTypeDef hspi3;
+SPI_HandleTypeDef hspi4;
+SPI_HandleTypeDef hspi5;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-uint8_t buffer[512] = {0};
-uint8_t usart_buffer[22] = {0};
+uint8_t buffer[2048] = {0};
+uint8_t usart_buffer[22];
 
 unsigned char hostID = 0xFF;
 unsigned char peripheralGROUP = 0xFF;
-unsigned char peripheralID = 0xFF;
+unsigned char peripheralID = 0x01;
 unsigned char PROCESS = 0xFF;
-unsigned char COMMAND = 0xFF;
+unsigned char COMMAND = 0x12;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,13 +80,18 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
+static void MX_SPI1_Init(void);
+static void MX_SPI2_Init(void);
+static void MX_SPI3_Init(void);
+static void MX_SPI4_Init(void);
+static void MX_SPI5_Init(void);
 /* USER CODE BEGIN PFP */
 void USART_Receive_IT(unsigned char peripheralID);
+void USART_CDC_Transmit(unsigned char peripheralID);
 void data_received(uint8_t* data, uint32_t *Len);
 uint8_t data_check(uint8_t data[]);
 void PROCESS_INIT(uint8_t data[]);
 
-// External private functions
 extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 /* USER CODE END PFP */
 
@@ -125,6 +136,11 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+  MX_SPI1_Init();
+  MX_SPI2_Init();
+  MX_SPI3_Init();
+  MX_SPI4_Init();
+  MX_SPI5_Init();
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
@@ -132,7 +148,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  USART_Receive_IT(peripheralID);
+	  HAL_UART_Receive_IT(&huart1, usart_buffer, sizeof(usart_buffer));
+	  HAL_UART_Receive_IT(&huart2, usart_buffer, sizeof(usart_buffer));
+	  HAL_UART_Receive_IT(&huart3, usart_buffer, sizeof(usart_buffer));
+	  HAL_UART_Receive_IT(&huart6, usart_buffer, sizeof(usart_buffer));
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -293,6 +312,196 @@ static void MX_I2C3_Init(void)
   /* USER CODE BEGIN I2C3_Init 2 */
 
   /* USER CODE END I2C3_Init 2 */
+
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief SPI3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI3_Init(void)
+{
+
+  /* USER CODE BEGIN SPI3_Init 0 */
+
+  /* USER CODE END SPI3_Init 0 */
+
+  /* USER CODE BEGIN SPI3_Init 1 */
+
+  /* USER CODE END SPI3_Init 1 */
+  /* SPI3 parameter configuration*/
+  hspi3.Instance = SPI3;
+  hspi3.Init.Mode = SPI_MODE_MASTER;
+  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi3.Init.NSS = SPI_NSS_SOFT;
+  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi3.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI3_Init 2 */
+
+  /* USER CODE END SPI3_Init 2 */
+
+}
+
+/**
+  * @brief SPI4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI4_Init(void)
+{
+
+  /* USER CODE BEGIN SPI4_Init 0 */
+
+  /* USER CODE END SPI4_Init 0 */
+
+  /* USER CODE BEGIN SPI4_Init 1 */
+
+  /* USER CODE END SPI4_Init 1 */
+  /* SPI4 parameter configuration*/
+  hspi4.Instance = SPI4;
+  hspi4.Init.Mode = SPI_MODE_MASTER;
+  hspi4.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi4.Init.NSS = SPI_NSS_SOFT;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi4.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI4_Init 2 */
+
+  /* USER CODE END SPI4_Init 2 */
+
+}
+
+/**
+  * @brief SPI5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI5_Init(void)
+{
+
+  /* USER CODE BEGIN SPI5_Init 0 */
+
+  /* USER CODE END SPI5_Init 0 */
+
+  /* USER CODE BEGIN SPI5_Init 1 */
+
+  /* USER CODE END SPI5_Init 1 */
+  /* SPI5 parameter configuration*/
+  hspi5.Instance = SPI5;
+  hspi5.Init.Mode = SPI_MODE_MASTER;
+  hspi5.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi5.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi5.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi5.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi5.Init.NSS = SPI_NSS_SOFT;
+  hspi5.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi5.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi5.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi5.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi5.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI5_Init 2 */
+
+  /* USER CODE END SPI5_Init 2 */
 
 }
 
@@ -458,28 +667,25 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+/* Transmit data received from USART to USB */
+void USART_CDC_Transmit(unsigned char peripheralID)
+{
+	char transmit_buffer[32] = "";
+	char *usarts[7] = {"USART0", "USART1", "USART2", "USART3", "USART4", "USART5", "USART6"};
+
+	sprintf(transmit_buffer, "From %s, %s", usarts[peripheralID], usart_buffer);
+	CDC_Transmit_FS((uint8_t *)&transmit_buffer, strlen(transmit_buffer));
+}
 
 /* USART receive function */
 void USART_Receive_IT(unsigned char peripheralID)
 {
-	if(peripheralID == 0x01)
-	{
-		HAL_UART_Receive_IT(&huart1, usart_buffer, sizeof(usart_buffer));
-	}
+	UART_HandleTypeDef u_dumb;
 
-	else if(peripheralID == 0x02)
+	if (peripheralID <= 0x06)
 	{
-		HAL_UART_Receive_IT(&huart2, usart_buffer, sizeof(usart_buffer));
-	}
-
-	else if(peripheralID == 0x03)
-	{
-		HAL_UART_Receive_IT(&huart3, usart_buffer, sizeof(usart_buffer));
-	}
-
-	else if(peripheralID == 0x06)
-	{
-		HAL_UART_Receive_IT(&huart6, usart_buffer, sizeof(usart_buffer));
+		UART_HandleTypeDef uart[7] = {u_dumb,huart1,huart2,huart3,u_dumb,u_dumb,huart6};
+		HAL_UART_Receive_IT(&(uart[peripheralID]), usart_buffer, sizeof(usart_buffer));
 	}
 }
 
@@ -489,7 +695,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if(peripheralGROUP == 0x20)
 	{
 		USART_Receive_IT(peripheralID);
-		CDC_Transmit_FS(usart_buffer, sizeof(usart_buffer));
+		USART_CDC_Transmit(peripheralID);
 	}
 }
 
@@ -503,13 +709,12 @@ void data_received(uint8_t* data, uint32_t *Len)
 
 	if(data_check(data) == 0)
 	{
-	  //PROCESS_INIT(data);
-		CDC_Transmit_FS(buffer, sizeof(buffer)-1);
+	  PROCESS_INIT(data);
 	}
 
 	else
 	{
-	  CDC_Transmit_FS((uint8_t *)"Incorrect data.\n", strlen("Incorrect data.\n"));
+	  CDC_Transmit_FS((uint8_t *)"Error: Incorrect data.\n", strlen("Error: Incorrect data.\n"));
 	}
 
 	memset (data, '\0', len);
@@ -552,11 +757,13 @@ void PROCESS_INIT(uint8_t data[])
 	else if(peripheralGROUP >= 0x30 && peripheralGROUP < 0x40)
 	{
 		//I2C Control
+		//I2C_Main(peripheralID, PROCESS, COMMAND);
 	}
 
 	else if(peripheralGROUP >= 0x40 && peripheralGROUP < 0x50)
 	{
 		//SPI Control
+		//SPI_Main(peripheralID, PROCESS, COMMAND);
 	}
 }
 /* USER CODE END 4 */
