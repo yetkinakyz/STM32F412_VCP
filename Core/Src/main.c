@@ -63,6 +63,10 @@ UART_HandleTypeDef huart6;
 uint8_t buffer[2048] = {0};
 uint8_t usart_buffer[22];
 
+extern int USART_R[];
+extern UART_HandleTypeDef dumb;
+extern char *usarts[];
+
 unsigned char hostID = 0xFF;
 unsigned char peripheralGROUP = 0xFF;
 unsigned char peripheralID = 0x01;
@@ -670,21 +674,18 @@ static void MX_GPIO_Init(void)
 /* Transmit data received from USART to USB */
 void USART_CDC_Transmit(unsigned char peripheralID)
 {
-	char transmit_buffer[32] = "";
-	char *usarts[7] = {"USART0", "USART1", "USART2", "USART3", "USART4", "USART5", "USART6"};
+	char cdc_transmit_buffer[35] = "";
 
-	sprintf(transmit_buffer, "From %s, %s", usarts[peripheralID], usart_buffer);
-	CDC_Transmit_FS((uint8_t *)&transmit_buffer, strlen(transmit_buffer));
+	sprintf(cdc_transmit_buffer, "From %s, %s", usarts[peripheralID], usart_buffer);
+	CDC_Transmit_FS((uint8_t *)&cdc_transmit_buffer, strlen(cdc_transmit_buffer));
 }
 
 /* USART receive function */
 void USART_Receive_IT(unsigned char peripheralID)
 {
-	UART_HandleTypeDef u_dumb;
-
 	if (peripheralID <= 0x06)
 	{
-		UART_HandleTypeDef uart[7] = {u_dumb,huart1,huart2,huart3,u_dumb,u_dumb,huart6};
+		UART_HandleTypeDef uart[7] = {dumb,huart1,huart2,huart3,dumb,dumb,huart6};
 		HAL_UART_Receive_IT(&(uart[peripheralID]), usart_buffer, sizeof(usart_buffer));
 	}
 }
@@ -692,7 +693,7 @@ void USART_Receive_IT(unsigned char peripheralID)
 /* USART receive callback */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(peripheralGROUP == 0x20)
+	if(peripheralGROUP == 0x20 && USART_R[peripheralID] == 1)
 	{
 		USART_Receive_IT(peripheralID);
 		USART_CDC_Transmit(peripheralID);
